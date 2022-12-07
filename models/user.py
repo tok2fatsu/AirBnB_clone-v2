@@ -1,29 +1,34 @@
 #!/usr/bin/python3
-""" holds class User"""
-import models
-from models.base_model import BaseModel, Base
-from os import getenv
-import sqlalchemy
+"""Module base_model
+This Module contains a definition for User Class
+"""
+
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 
+from models.base_model import Base, BaseModel
+
 
 class User(BaseModel, Base):
-    """Representation of a user """
-    if models.storage_t == 'db':
-        __tablename__ = 'users'
-        email = Column(String(128), nullable=False)
-        password = Column(String(128), nullable=False)
-        first_name = Column(String(128), nullable=True)
-        last_name = Column(String(128), nullable=True)
-        places = relationship("Place", backref="user")
-        reviews = relationship("Review", backref="user")
-    else:
-        email = ""
-        password = ""
-        first_name = ""
-        last_name = ""
-
-    def __init__(self, *args, **kwargs):
-        """initializes user"""
-        super().__init__(*args, **kwargs)
+    """A class that represents a user.
+    Attributes:
+        email (str): The email of the user.
+        password (str): The password of the user.
+        first_name (str): The first name of the user.
+        last_name (str): The last name of the user.
+    """
+    __tablename__ = "users"
+    email = Column(String(128), nullable=False)
+    password = Column(String(128), nullable=False)
+    first_name = Column(String(128), nullable=True)
+    last_name = Column(String(128), nullable=True)
+    places = relationship(
+        "Place",
+        cascade='all, delete, delete-orphan',
+        backref="user",
+    )
+    reviews = relationship(
+        "Review",
+        cascade='all, delete, delete-orphan',
+        backref="user",
+    )
