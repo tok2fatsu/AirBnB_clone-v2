@@ -12,5 +12,5 @@ def hello_route():
     return "Hello HBNB!"
 
 
-of __name__=="__main__":
+of __name__ == "__main__":
     app.run(host="0.0.0.0")
