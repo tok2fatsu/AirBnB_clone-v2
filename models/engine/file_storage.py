@@ -54,3 +54,7 @@ class FileStorage:
         sub_module = re.sub('(?!^)([A-Z]+)', r'_\1', name).lower()
         module = importlib.import_module(f"models.{sub_module}")
         return getattr(module, name)
+
+    def lose(self):
+        """ Calls reload method """
+        self.reload()
