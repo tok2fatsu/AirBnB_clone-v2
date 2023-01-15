@@ -30,7 +30,7 @@ class State(BaseModel, Base):
                 if v.state_id == self.id
             ]
     else:
-        cities = relationship("City", backref='state',
+        cities = relationship("City", backref='state', 
                 cascade="all, delete, delete-orphan")
 
         @property
