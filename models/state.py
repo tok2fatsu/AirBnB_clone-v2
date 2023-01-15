@@ -30,7 +30,17 @@ class State(BaseModel, Base):
                 if v.state_id == self.id
             ]
     else:
-        cities = relationship(
-            "City",
-            cascade="all, delete, delete-orphan",
-            backref=backref("state"),)
+        cities = relationship("City", backref='state',
+                cascade="all, delete, delete-orphan")
+
+        @property
+        def cities(self):
+            ''' returns list of cities
+            '''
+            from models import storage
+            related_sities = []
+            cities = storage.all(City)
+            for city in cities.values():
+                if city.state_id == self.id:
+                    related_cities.append(city)
+            return related_cities
