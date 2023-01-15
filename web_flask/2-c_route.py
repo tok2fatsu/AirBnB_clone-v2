@@ -24,4 +24,3 @@ def c_text(text):
 
 if __name__ == "__main__":
     app.run()
-
