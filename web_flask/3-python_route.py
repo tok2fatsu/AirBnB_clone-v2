@@ -21,15 +21,14 @@ def hbnb():
 def c_text(text):
     """prints C followed by <text> content"""
     text = text.replace("_", " ")
-    return "C %s" % text
+    return "C {}".format(text.replace("_", " "))
 
 
 @app.route('/python', strict_slashes=False)
 @app.route('/python/<text>', strict_slashes=False)
 def python_text(text="is cool"):
     """prints Python is cool"""
-    text = text.replace("_", " ")
-    return "Python %s" % text
+    return "Python {}".format(text.replace("_", " "))
 
 
 if __name__ == "__main__":
