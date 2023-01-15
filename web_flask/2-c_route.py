@@ -11,15 +11,15 @@ def hbnb_route():
     return "Hello HBNB"
 
 
-@app.route('/')
+@app.route('/', strict_slashes=False)
 def hbnb():
     return "HBNB"
 
 
-@app.route('/c/<string:text>')
+@app.route('/c/<string:text>', strict_slashes=False)
 def c_text(text):
     text = text.replace("_", " ")
-    return "C %s" % text
+    return "C {}".format(text.replace("_", " "))
 
 
 if __name__ == "__main__":
