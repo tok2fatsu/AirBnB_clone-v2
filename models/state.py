@@ -16,12 +16,14 @@ from models.city import City
 class State(BaseModel, Base):
     """A class that represents a state
     Attribute:
-        name (str): the name of the state
+        name : the name of the state
     """
+    __table_args__ = ({'mysql_default_charset': 'latin1'})
     __tablename__ = "states"
     name = Column(String(128), nullable=False)
 
     if getenv("HBNB_TYPE_STORAGE") != "db":
+
         @property
         def cities(self):
             """Get list of cities that match this state id"""
@@ -30,17 +32,8 @@ class State(BaseModel, Base):
                 if v.state_id == self.id
             ]
     else:
-        cities = relationship("City", backref='state',
-                              cascade="all, delete, delete-orphan")
-
-        @property
-        def cities(self):
-            ''' returns list of cities
-            '''
-            from models import storage
-            related_sities = []
-            cities = storage.all(City)
-            for city in cities.values():
-                if city.state_id == self.id:
-                    related_cities.append(city)
-            return related_cities
+        cities = relationship(
+            "City",
+            cascade="all, delete, delete-orphan",
+            backref=backref("state"),
+        )

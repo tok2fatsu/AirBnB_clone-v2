@@ -3,7 +3,6 @@
 This Module contains a definition for DBStorage Class
 """
 
-
 from os import getenv
 
 from sqlalchemy import create_engine
@@ -25,14 +24,16 @@ class DBStorage:
     __session = None
 
     def __init__(self):
-        """Initializes DBStorage Class"""
+        """Initializes DBStorage Class
+        using the environment variables
+        """
         user = getenv("HBNB_MYSQL_USER")
         pwd = getenv("HBNB_MYSQL_PWD")
         host = getenv("HBNB_MYSQL_HOST")
         db = getenv("HBNB_MYSQL_DB")
 
         self.__engine = create_engine(
-            f"mysql+mysqldb://{user}:{pwd}@{host}:3306/{db}",
+            "mysql+mysqldb://{}:{}@{}:3306/{}".format(user, pwd, host, db),
             pool_pre_ping=True,
         )
 
@@ -43,10 +44,11 @@ class DBStorage:
         """returns the dictionary all or filtered objects"""
         all_objs = []
         _all_cls = [cls] if cls is not None else [
-            State, City, User, Place, Review, Amenity]
+            State, City, User, Place, Review, Amenity
+        ]
         for _cls in _all_cls:
             all_objs += self.__session.query(_cls)
-        return {f"{type(v).__name__}.{v.id}": v for v in all_objs}
+        return {"{}.{}".format(type(v).__name__, v.id): v for v in all_objs}
 
     def new(self, obj):
         """adds the object to the current database session"""
@@ -66,9 +68,10 @@ class DBStorage:
     def reload(self):
         """reloads the memory values form database"""
         Base.metadata.create_all(self.__engine)
-        session_maker = sessionmaker(
-            bind=self.__engine, expire_on_commit=False)
-        self.__session = scoped_session(session_maker)()
+        session_maker = sessionmaker(bind=self.__engine,
+                                     expire_on_commit=False)
+        Session = scoped_session(session_maker)
+        self.__session = Session()
 
     def close(self):
         """cleanup method"""
