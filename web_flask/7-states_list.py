@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-"""Starts a Flask web app
+"""A Flask web application
+supported api end points
+  - /states_list : returns list of the states
 """
 from flask import Flask, render_template
 
@@ -9,22 +11,23 @@ from models.state import State
 app = Flask(__name__)
 
 
+@app.teardown_appcontext
+def teardown(self):
+    """ Cleanup Db Session
+    """
+    storage.close()
+
+
 @app.route("/states_list", strict_slashes=False)
 def states_list():
     """Lists states
     Returns:
         string: simple message
     """
-    states = sorted(list(storage.all(State).values()), key=lambda x: x.name)
-    return render_template("7-states_list.html", states=list(states))
-
-
-@app.teardown_appcontext
-def teardown(self):
-    """ Cleanup Db Session"""
-    storage.close()
+    states = list(storage.all(State).values())
+    return render_template("7-states_list.html", states=states)
 
 
 if __name__ == "__main__":
     storage.reload()
-    app.run()
+    app.run("0.0.0.0", 5000)
