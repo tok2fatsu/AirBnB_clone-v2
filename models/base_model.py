@@ -7,7 +7,7 @@ import uuid
 from datetime import datetime
 
 from sqlalchemy import Column, DateTime, String
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.ext.declarative import declarative_base
 
 import models
 
@@ -70,4 +70,8 @@ class BaseModel:
 
     def __str__(self) -> str:
         """should print/str representation of the BaseModel instance."""
-        return f"[{self.__class__.__name__}] ({self.id}) {self.to_dict()}"
+        return "[{}] ({}) {}".format(
+            self.__class__.__name__,
+            self.id,
+            self.to_dict(),
+        )
